@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const client = require("./redisClient");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.post("/chat", async (req, res) => {
   try {
+    console.time("Response Time");
     let userChat = "";
 
     //  Chat history
@@ -31,6 +33,20 @@ app.post("/chat", async (req, res) => {
     else {
       return res.status(400).json({
         error: "Invalid input",
+      });
+    }
+
+    const cacheKey = req.body.message ? req.body.message.trim().toLowerCase() : userChat.trim().toLowerCase();;
+    const cachedResponse = await client.get(cacheKey);
+
+    if (cachedResponse) {
+      console.log("Response from Redis Cache");
+
+      console.timeEnd("Response Time")
+
+      return res.json({
+        reply: cachedResponse,
+        source: "redis cache",
       });
     }
 
@@ -89,8 +105,16 @@ Assistant:
     //  Clean response
     const aiReply = response.data.response.trim();
 
+    await client.set(cacheKey, aiReply, {
+      EX: 3600,
+    });
+    console.log("Response from Ollama API");
+    console.timeEnd("Response Time");
+
+
     res.json({
       reply: aiReply,
+      source: "api",
     });
 
   } catch (error) {

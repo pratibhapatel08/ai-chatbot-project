@@ -1,14 +1,16 @@
 # AI Chatbot
 
-A full-stack AI chatbot built using React, Node.js, Express, and Ollama.
+A full-stack AI chatbot built using React, Node.js, Express, Ollama, and Redis.
 
 ## Features
 
 - Real-time AI chat
 - Hindi, English, Hinglish support
-- Chat history
+- Chat history support
+- Redis caching for faster responses
 - Responsive UI
 - Loading animation
+- AI response optimization
 
 ## Tech Stack
 
@@ -19,10 +21,15 @@ Frontend:
 Backend:
 - Node.js
 - Express.js
+- Axios
 
 AI:
 - Ollama
 - Llama3
+
+Database / Cache
+- Redis
+
 
 ## Installation
 

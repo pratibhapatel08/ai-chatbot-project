@@ -10,13 +10,16 @@ export default function App() {
     if (!input.trim()) return;
 
     const newMessages = [...messages, { type: "user", text: input }];
-  setMessages(newMessages);
-  setLoading(true);
+    setMessages(newMessages);
+    setLoading(true);
 
     const res = await fetch("http://localhost:5000/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages:newMessages })
+      body: JSON.stringify({
+        message: input,
+        messages: newMessages,
+      })
     });
 
     const data = await res.json();
@@ -32,7 +35,7 @@ export default function App() {
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-      
+
       {/* Header */}
       <div className="p-4 text-xl font-semibold backdrop-blur bg-white/5 border-b border-white/10">
         🤖 AI Assistant
@@ -43,11 +46,10 @@ export default function App() {
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`max-w-md px-4 py-3 rounded-2xl shadow ${
-              msg.type === "user"
+            className={`max-w-md px-4 py-3 rounded-2xl shadow ${msg.type === "user"
                 ? "bg-blue-500 ml-auto"
                 : "bg-white/10 backdrop-blur"
-            }`}
+              }`}
           >
             {msg.text}
           </div>
