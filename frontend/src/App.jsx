@@ -13,7 +13,7 @@ export default function App() {
     setMessages(newMessages);
     setLoading(true);
 
-    const res = await fetch("http://localhost:5000/chat", {
+    const res = await fetch("https://ai-chatbot-project-mhby.onrender.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
